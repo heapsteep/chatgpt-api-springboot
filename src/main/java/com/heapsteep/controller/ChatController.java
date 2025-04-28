@@ -17,6 +17,7 @@ public class ChatController {
         this.chatGptService = chatGptService;
     }
 
+    //Old Blocking way:
     @PostMapping("/blocking")
     public ResponseEntity<OpenAiResponse> chat(
             @RequestBody ChatRequest chatRequest,
@@ -26,7 +27,7 @@ public class ChatController {
         return ResponseEntity.ok(response);
     }
 
-    //Non- blocking:
+    //Non- blocking way:
     @PostMapping("/reactive")
     public Mono<ResponseEntity<OpenAiResponse>> chatReactive(
             @RequestBody ChatRequest chatRequest,

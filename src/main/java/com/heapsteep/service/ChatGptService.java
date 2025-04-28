@@ -57,6 +57,4 @@ public class ChatGptService {
                 .bodyToMono(OpenAiResponse.class);
                 //.block(); // blocks to return the actual result
     }
-
-
 }
