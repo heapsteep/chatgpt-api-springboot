@@ -7,7 +7,9 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -19,7 +21,7 @@ public class ChatGptService {
     //Using RestTemplate:
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public OpenAiResponse askChatGpt(ChatRequest chatRequest, String authHeader) {
+    public OpenAiResponse askChatGptBlocking(ChatRequest chatRequest, String authHeader) {
         String url = "https://api.openai.com/v1/chat/completions";
 
         HttpHeaders headers = new HttpHeaders();
@@ -36,13 +38,13 @@ public class ChatGptService {
     }
 
     //Using WebClient:
-    /*private final WebClient webClient;
+    private final WebClient webClient;
 
     public ChatGptService(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.baseUrl("https://api.openai.com/v1").build();
     }
 
-    public OpenAiResponse askChatGpt(ChatRequest chatRequest, String authHeader) {
+    public Mono<OpenAiResponse> askChatGptReactive(ChatRequest chatRequest, String authHeader) {
         OpenAiRequest.Message message = new OpenAiRequest.Message("user", chatRequest.getPrompt());
         OpenAiRequest request = new OpenAiRequest("gpt-4.1", Collections.singletonList(message));
 
@@ -52,9 +54,9 @@ public class ChatGptService {
                 .header(HttpHeaders.AUTHORIZATION, authHeader)
                 .body(Mono.just(request), OpenAiRequest.class)
                 .retrieve()
-                .bodyToMono(OpenAiResponse.class)
-                .block(); // blocks to return the actual result
-    }*/
+                .bodyToMono(OpenAiResponse.class);
+                //.block(); // blocks to return the actual result
+    }
 
 
 }

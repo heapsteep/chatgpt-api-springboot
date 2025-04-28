@@ -5,6 +5,7 @@ import com.heapsteep.model.OpenAiResponse;
 import com.heapsteep.service.ChatGptService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/chat")
@@ -16,12 +17,22 @@ public class ChatController {
         this.chatGptService = chatGptService;
     }
 
-    @PostMapping
+    @PostMapping("/blocking")
     public ResponseEntity<OpenAiResponse> chat(
             @RequestBody ChatRequest chatRequest,
             @RequestHeader("Authorization") String authorizationHeader
     ) {
-        OpenAiResponse response = chatGptService.askChatGpt(chatRequest, authorizationHeader);
+        OpenAiResponse response = chatGptService.askChatGptBlocking(chatRequest, authorizationHeader);
         return ResponseEntity.ok(response);
+    }
+
+    //Non- blocking:
+    @PostMapping("/reactive")
+    public Mono<ResponseEntity<OpenAiResponse>> chatReactive(
+            @RequestBody ChatRequest chatRequest,
+            @RequestHeader("Authorization") String authorizationHeader
+    ) {
+        return chatGptService.askChatGptReactive(chatRequest, authorizationHeader)
+                .map(response -> ResponseEntity.ok(response));
     }
 }
